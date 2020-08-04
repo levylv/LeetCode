@@ -1,0 +1,43 @@
+class Solution {
+    private Map<Character, Integer> need = new HashMap<>();
+    private Map<Character, Integer> window = new HashMap<>();
+    public String minWindow(String s, String t) {
+        for (int i = 0; i < t.length(); i++) {
+            need.put(t.charAt(i), need.getOrDefault(t.charAt(i), 0) + 1);
+        }
+
+        int left = 0, right = -1;
+        int resL = -1, resR = -1;
+        int min = Integer.MAX_VALUE;
+        while (right < s.length()) {
+            right++;
+            if (right < s.length()) {
+                window.put(s.charAt(right), window.getOrDefault(s.charAt(right), 0) + 1);
+            }
+            while (left <= right && check()) {
+                if (right - left + 1 < min) {
+                    resL = left;
+                    resR = right;
+                    min = right - left + 1;
+                }
+                window.put(s.charAt(left), window.getOrDefault(s.charAt(left), 0) - 1);
+                left++;
+            }
+
+        }
+        return s.substring(resL, resR+1);
+    }
+
+    public boolean check() {
+        for (Map.Entry<Character, Integer> entry : need.entrySet()) {
+            if (!window.containsKey(entry.getKey()) || window.get(entry.getKey()) < entry.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+}
+
+//runtime_error:Line 28: java.lang.StringIndexOutOfBoundsException: begin -1, end 0, length 1
+//last_testcase:"a" "aa"

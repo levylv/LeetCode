@@ -1,0 +1,35 @@
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals == null) return null;
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
+        List<int[]> tmp = new ArrayList<>();
+        int i = 0;
+        int j = 1;
+        while (j < intervals.length) {
+            if (intervals[i][1] >= intervals[j][0]) {
+                intervals[i][1] = Math.max(intervals[i][1], intervals[j][1]);
+                j++;
+            } else {
+                tmp.add(intervals[i]);
+                i = j;
+                j = i+1;
+            }
+        }
+        tmp.add(intervals[i]);
+        int[][] res = new int[tmp.size()][2];
+        for (i = 0; i < tmp.size(); i++) {
+            res[i][0] = tmp.get(i)[0];
+            res[i][1] = tmp.get(i)[1];
+        }
+        return res;
+
+    }
+}
+
+//runtime_error:Line 23: java.lang.ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0
+//last_testcase:[]
